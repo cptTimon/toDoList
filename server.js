@@ -1,15 +1,14 @@
 const express = require('express');
-const path = require('path');
 const socket = require('socket.io');
+const cors = require('cors');
+
+
 
 const app = express();
 
+app.use(cors());
+
 let tasks = [];
-
-
-app.get('/', (req,res) => {
-  res.sendFile(path.join(__dirname, '/client/index.html'));
-});
 
 app.use((req,res) => {
   return res.status(404).json({
