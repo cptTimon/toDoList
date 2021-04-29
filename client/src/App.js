@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 class App extends React.Component {
-
   state = {
     tasks: [],
     taskName: '',
@@ -24,7 +23,7 @@ class App extends React.Component {
     if(localRemoval) this.socket.emit('removeTask', id);
   };
 
-  updateTasks = (newTasks) => {
+  updateTasks = newTasks => {
     this.setState({
       tasks: newTasks,
     });
@@ -40,7 +39,7 @@ class App extends React.Component {
     });
   };
 
-  submitForm = (event) => {
+  submitForm = event => {
     event.preventDefault();
     const id = uuidv4();
     this.addTask(id, this.state.taskName);
@@ -48,11 +47,10 @@ class App extends React.Component {
     this.setState({
       taskName: '',
     });
-  }
+  };
 
   render() {
     const { tasks, taskName } = this.state;
-    console.log(tasks);
     return (
       <div className="App">
 
