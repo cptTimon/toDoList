@@ -1,17 +1,12 @@
 const express = require('express');
 const socket = require('socket.io');
 const cors = require('cors');
-const path = require('path');
 
 const app = express();
 
 app.use(cors());
 
 let tasks = [];
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/src/app.js'));
-});
 
 app.use((req,res) => {
   return res.status(404).json({
@@ -28,12 +23,16 @@ const io = socket(server);
 io.on('connection', (socket) => {
   console.log('New client! His id is ' + socket.id);
   socket.emit('updateTasks', tasks);
-  socket.on('removeTask', (index) => {
-    tasks.filter(task => tasks.indexOf(task) !== index);
-    socket.broadcast.emit('removeTask', index);
+  socket.on('removeTask', (id) => {
+    tasks = tasks.filter(task => task.id !== id);
+    socket.broadcast.emit('removeTask', id);
   });
-  socket.on('addTask', (name) => {
-    tasks.push(name);
-    socket.broadcast.emit('addTask', name);
+  socket.on('addTask', ({id, name}) => {
+    const newTask = {
+      id,
+      name,
+    };
+    tasks = [...tasks, newTask];
+    socket.broadcast.emit('addTask', newTask);
   });
 });
